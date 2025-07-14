@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import "./App.css";
 import "./airfryerform.css";
 
 function AirFryerForm() {
@@ -49,12 +48,18 @@ function AirFryerForm() {
     idx?: number
   ) => {
     const { name, value } = e.target;
+    let newErrors = { ...errors };
     if (name === "pin" && typeof idx === "number") {
       let val = value.replace(/[^\d]/g, "").slice(0, 4);
       const newPin = [...form.pin];
       newPin[idx] = val;
       setForm((f) => ({ ...f, pin: newPin }));
-
+      // Validate pin
+      if (!validatePin(newPin)) {
+        newErrors.pin = "Enter all 16 digits";
+      } else {
+        delete newErrors.pin;
+      }
       // Move to next box if 4 digits entered
       if (val.length === 4 && idx < 3) {
         pinRefs[idx + 1].current?.focus();
@@ -65,7 +70,29 @@ function AirFryerForm() {
       }
     } else {
       setForm((f) => ({ ...f, [name]: value }));
+      // Validate each field
+      if (name === "firstName") {
+        if (!value.trim()) newErrors.firstName = "Required";
+        else delete newErrors.firstName;
+      }
+      if (name === "lastName") {
+        if (!value.trim()) newErrors.lastName = "Required";
+        else delete newErrors.lastName;
+      }
+      if (name === "phone") {
+        if (!validatePhone(value)) newErrors.phone = "Enter valid US phone";
+        else delete newErrors.phone;
+      }
+      if (name === "email") {
+        if (!validateEmail(value)) newErrors.email = "Enter valid email";
+        else delete newErrors.email;
+      }
+      if (name === "cost") {
+        if (!validateCost(value)) newErrors.cost = "Enter valid dollar amount";
+        else delete newErrors.cost;
+      }
     }
+    setErrors(newErrors);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -111,6 +138,7 @@ function AirFryerForm() {
           air fryer and where to ship your newest addition to your culinary
           needs.
         </p>
+        <div style={{ flex: 1 }} />
         <button className="airfryer-details-btn">Details</button>
       </div>
       <form className="airfryer-form" onSubmit={handleSubmit}>
@@ -124,7 +152,9 @@ function AirFryerForm() {
             required
             value={form.firstName}
             onChange={handleChange}
-            className="airfryer-input"
+            className={`airfryer-input${
+              errors.firstName ? " airfryer-input-error" : ""
+            }`}
             placeholder="John"
           />
           {errors.firstName && (
@@ -141,7 +171,9 @@ function AirFryerForm() {
             required
             value={form.lastName}
             onChange={handleChange}
-            className="airfryer-input"
+            className={`airfryer-input${
+              errors.lastName ? " airfryer-input-error" : ""
+            }`}
             placeholder="Doe"
           />
           {errors.lastName && (
@@ -158,8 +190,10 @@ function AirFryerForm() {
             required
             value={form.phone}
             onChange={handleChange}
-            className="airfryer-input"
-            placeholder="(555) 555-5555 or 555-555-5555"
+            className={`airfryer-input${
+              errors.phone ? " airfryer-input-error" : ""
+            }`}
+            placeholder="1234567890"
             pattern="^\d{10}$"
             maxLength={10}
           />
@@ -175,7 +209,9 @@ function AirFryerForm() {
             required
             value={form.email}
             onChange={handleChange}
-            className="airfryer-input"
+            className={`airfryer-input${
+              errors.email ? " airfryer-input-error" : ""
+            }`}
             placeholder="you@email.com"
           />
           {errors.email && <p className="airfryer-error">{errors.email}</p>}
@@ -191,7 +227,9 @@ function AirFryerForm() {
             required
             value={form.cost}
             onChange={handleChange}
-            className="airfryer-input"
+            className={`airfryer-input${
+              errors.cost ? " airfryer-input-error" : ""
+            }`}
             placeholder="199.99"
             pattern="^\d{1,6}(\.\d{2})?$"
           />
@@ -213,7 +251,9 @@ function AirFryerForm() {
                   required
                   value={val}
                   onChange={(e) => handleChange(e, idx)}
-                  className="airfryer-pin-input"
+                  className={`airfryer-pin-input${
+                    errors.pin ? " airfryer-input-error" : ""
+                  }`}
                   placeholder="####"
                   maxLength={4}
                 />

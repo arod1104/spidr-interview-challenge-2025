@@ -1,11 +1,6 @@
-/* Air Fryer Interest Form Desktop Layout */
-/* .airfryer-bg {
-  min-height: 100vh;
-  background: #181b1d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
+:root {
+  font-family: "Raleway", "Montserrat", "Open Sans", Arial, sans-serif;
+}
 
 input {
   color: black;
@@ -43,7 +38,7 @@ input {
   font-weight: 600;
   text-align: center;
   margin-bottom: 1rem;
-  font-family: "Montserrat", "Open Sans", Arial, sans-serif;
+  font-family: inherit;
 }
 
 .airfryer-divider {
@@ -96,7 +91,7 @@ input {
   font-weight: 500;
   color: #fff;
   margin-bottom: 0.5rem;
-  font-family: "Montserrat", "Open Sans", Arial, sans-serif;
+  font-family: inherit;
   text-align: left; /* Left justify label text */
 }
 
@@ -112,13 +107,18 @@ input {
   border-radius: 4px;
   padding: 0.7rem 1rem;
   font-size: 1rem;
-  font-family: "Montserrat", "Open Sans", Arial, sans-serif;
+  font-family: inherit;
   margin-bottom: 0.2rem;
 }
 .airfryer-input:focus {
   outline: none;
   border-color: #4390a0;
   box-shadow: 0 0 0 2px #4390a033;
+}
+
+.airfryer-input-error {
+  border-color: #e30613 !important;
+  box-shadow: 0 0 0 2px #e3061344 !important;
 }
 
 .airfryer-pin-row {
@@ -137,7 +137,7 @@ input {
   padding: 0.7rem 0.5rem;
   font-size: 1.1rem;
   text-align: center;
-  font-family: "Montserrat", "Open Sans", Arial, sans-serif;
+  font-family: inherit;
 }
 .airfryer-pin-input:focus {
   outline: none;
@@ -173,7 +173,7 @@ input {
   color: #e30613;
   font-size: 0.95rem;
   margin-top: 0.1rem;
-  font-family: "Montserrat", "Open Sans", Arial, sans-serif;
+  font-family: inherit;
 }
 
 @media (max-width: 900px) {
