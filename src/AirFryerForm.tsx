@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./App.css";
 import "./airfryerform.css";
 
@@ -30,13 +30,19 @@ function AirFryerForm() {
   const [errors, setErrors] = useState<ErrorsType>({});
 
   // Validation helpers
-  const validateEmail = (email: string) => /.+@.+\..+/.test(email);
-  const validatePhone = (phone: string) =>
-    /^(\(\d{3}\) |\d{3}-)\d{3}-\d{4}$/.test(phone.trim());
+  const validateEmail = (email: string) => /^[^@]+@[^@]+\.[^@]+$/.test(email);
+  const validatePhone = (phone: string) => /^\d{10}$/.test(phone.trim());
   const validateCost = (cost: string) =>
     /^\d{1,6}(\.\d{2})?$/.test(cost.trim());
   const validatePin = (pinArr: string[]) =>
     pinArr.every((p) => /^\d{4}$/.test(p));
+
+  const pinRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -44,9 +50,19 @@ function AirFryerForm() {
   ) => {
     const { name, value } = e.target;
     if (name === "pin" && typeof idx === "number") {
+      let val = value.replace(/[^\d]/g, "").slice(0, 4);
       const newPin = [...form.pin];
-      newPin[idx] = value.replace(/[^\d]/g, "").slice(0, 4);
+      newPin[idx] = val;
       setForm((f) => ({ ...f, pin: newPin }));
+
+      // Move to next box if 4 digits entered
+      if (val.length === 4 && idx < 3) {
+        pinRefs[idx + 1].current?.focus();
+      }
+      // Move to previous box if deleting and box is empty
+      if (val.length === 0 && idx > 0) {
+        pinRefs[idx - 1].current?.focus();
+      }
     } else {
       setForm((f) => ({ ...f, [name]: value }));
     }
@@ -144,7 +160,8 @@ function AirFryerForm() {
             onChange={handleChange}
             className="airfryer-input"
             placeholder="(555) 555-5555 or 555-555-5555"
-            pattern="^(\(\d{3}\) |\d{3}-)\d{3}-\d{4}$"
+            pattern="^\d{10}$"
+            maxLength={10}
           />
           {errors.phone && <p className="airfryer-error">{errors.phone}</p>}
         </div>
@@ -187,9 +204,9 @@ function AirFryerForm() {
           </label>
           <div className="airfryer-pin-row">
             {form.pin.map((val, idx) => (
-              <>
+              <React.Fragment key={idx}>
                 <input
-                  key={idx}
+                  ref={pinRefs[idx]}
                   name="pin"
                   type="text"
                   inputMode="numeric"
@@ -201,7 +218,7 @@ function AirFryerForm() {
                   maxLength={4}
                 />
                 {idx < 3 && <span className="airfryer-pin-dash">-</span>}
-              </>
+              </React.Fragment>
             ))}
           </div>
           {errors.pin && <p className="airfryer-error">{errors.pin}</p>}
