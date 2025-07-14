@@ -56,7 +56,7 @@ input {
 
 .airfryer-desc {
   font-size: 1.15rem;
-  text-align: center;
+  text-align: left;
   margin-bottom: 2.5rem;
   line-height: 1.5;
 }
@@ -71,10 +71,8 @@ input {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-}
-.airfryer-details-btn:hover {
-  background: #fff;
-  color: #4e868e;
+  align-self: flex-start;
+  margin-left: 0;
 }
 
 .airfryer-form {
