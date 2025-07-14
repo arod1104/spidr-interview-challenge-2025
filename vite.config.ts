@@ -4,5 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/spidr-interview-challenge-2025/",
   plugins: [react(), tailwindcss()],
 });
